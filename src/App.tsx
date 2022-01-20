@@ -1,56 +1,74 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import {
+  selectUsers,
+  selectPageNumber,
+  changePageNumber,
+  selectTotalPage,
+  sortByFullName, sortByUserName
+} from "./features/user/userSlice";
+import {useAppDispatch, useAppSelector} from "./app/hooks";
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import {Pagination, Paper, TableSortLabel} from "@mui/material";
 
 function App() {
+  const users = useAppSelector(selectUsers);
+  const pageNumber = useAppSelector(selectPageNumber);
+  const totalPage = useAppSelector(selectTotalPage);
+  const dispatch = useAppDispatch();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <TableSortLabel onClick={() => dispatch(sortByFullName())}>
+                  Full Name
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel onClick={() => dispatch(sortByUserName())}>
+                  User Name
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                Thumbnail
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              users.map(user =>
+                <TableRow
+                  key={user.login.username}
+                >
+                  <TableCell>
+                    {user.name.first} {user.name.last}
+                  </TableCell>
+                  <TableCell>
+                    {user.login.username}
+                  </TableCell>
+                  <TableCell>
+                    <img src={user.picture.thumbnail}/>
+                  </TableCell>
+                </TableRow>
+              )
+            }
+          </TableBody>
+        </Table>
+
+      </TableContainer>
+      <Pagination
+        count={totalPage}
+        page={pageNumber}
+        onChange={(event, pageNumber) => dispatch(changePageNumber(pageNumber)) }
+        />
     </div>
   );
 }
