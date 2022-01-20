@@ -14,7 +14,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import {Pagination, Paper, TableSortLabel} from "@mui/material";
+import {Box, Pagination, Paper, TableSortLabel} from "@mui/material";
 
 function App() {
   const users = useAppSelector(selectUsers);
@@ -22,8 +22,15 @@ function App() {
   const totalPage = useAppSelector(selectTotalPage);
   const dispatch = useAppDispatch();
   return (
-    <div className="App">
-      <TableContainer component={Paper}>
+    <Box sx={{
+      height: '100vh',
+      background: "#F0F8FF",
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <TableContainer component={Paper} sx={{maxWidth: 900}}>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -65,11 +72,12 @@ function App() {
 
       </TableContainer>
       <Pagination
+        sx={{pt: 4}}
         count={totalPage}
         page={pageNumber}
         onChange={(event, pageNumber) => dispatch(changePageNumber(pageNumber)) }
         />
-    </div>
+    </Box>
   );
 }
 
